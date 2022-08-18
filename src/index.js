@@ -41,6 +41,7 @@ async function onSearch(e) {
         page += 1;
       }
     } catch (error) {
+      console.log(error.message);
       Notify.failure('Something was wrang. Please try again.');
     }
   }
@@ -59,6 +60,7 @@ async function onClick() {
     }
     page += 1;
   } catch (error) {
+    console.log(error.message);
     Notify.failure('Something was wrang. Please try again.');
   }
 }
