@@ -10,7 +10,7 @@ const imagesGallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
 let page = 1;
-let q;
+let q = searchQuery.value.trim();
 
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onClick);
