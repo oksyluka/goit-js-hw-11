@@ -48,6 +48,7 @@ async function onSearch(e) {
 
 async function onClick() {
   try {
+    q = searchQuery.value.trim();
     const data = await getFotoes(q, page);
     renderGallery(data.hits);
     gallery.refresh();
