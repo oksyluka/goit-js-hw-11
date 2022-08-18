@@ -10,6 +10,7 @@ const imagesGallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
 let page = 1;
+let q;
 
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onClick);
@@ -18,7 +19,6 @@ async function onSearch(e) {
   e.preventDefault();
   imagesGallery.innerHTML = '';
   loadMoreBtn.classList.add('is-hidden');
-  page = 1;
   q = searchQuery.value.trim();
   if (q === '') {
     Notify.info('Please enter your search request.');
