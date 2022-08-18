@@ -11,6 +11,10 @@ const loadMoreBtn = document.querySelector('.load-more');
 
 let page = 1;
 let q = searchQuery.value.trim();
+let gallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onClick);
@@ -33,10 +37,7 @@ async function onSearch(e) {
       } else {
         Notify.success(`Hooray! We found ${data.totalHits} images`);
         renderGallery(data.hits);
-        gallery = new SimpleLightbox('.gallery a', {
-          captionsData: 'alt',
-          captionDelay: 250,
-        });
+        gallery.refresh();
         loadMoreBtn.classList.remove('is-hidden');
         page += 1;
       }
@@ -49,7 +50,6 @@ async function onSearch(e) {
 
 async function onClick() {
   try {
-    q = searchQuery.value.trim();
     const data = await getFotoes(q, page);
     renderGallery(data.hits);
     gallery.refresh();
