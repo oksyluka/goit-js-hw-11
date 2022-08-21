@@ -16,49 +16,59 @@ const gallery = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 let page = 1;
-
+let query;
 
 searchForm.addEventListener('submit', onSearch);
 loadMoreBtn.addEventListener('click', onLoadMore);
-infinitScrollBtn.addEventListener('click', onInfinitScrolling);
 
 async function onSearch(e) {
   e.preventDefault();
   imagesGallery.innerHTML = '';
-  let q = searchQuery.value.trim();
-  if (q !== '') {
+  query = searchQuery.value.trim();
+  if (query === '') {
+    Notify.info('Please enter your search request.');
+    return;
+  } else {
     try {
-      const data = await getImages(q, page);
-      if (data.hits.length === 0) {
-        Notify.info(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      } else {
-        Notify.success(`Hooray! We found ${data.totalHits} images`);
-        renderGallery(data);
-        gallery.refresh();
-        ifGalleryEnd(data);
-      }
+      loadMoreBtn.classList.add('is-hidden');
+      const data = await getImages(query, page);
+      dataHandle(data);
     } catch (error) {
-      console.log(error.message);
-      Notify.failure('Something went wrang. Please try again.');
+      errorHandle(error);
     }
-  } else Notify.info('Please enter your search request.');
+  }
 }
 
 async function onLoadMore() {
   try {
-    let q = searchQuery.value.trim();
-    const data = await getImages(q, page);
+    loadMoreBtn.classList.add('is-hidden');
     page += 1;
+    const data = await getImages(query, page);
     renderGallery(data);
     gallery.refresh();
     smoothScroll();
     ifGalleryEnd(data);
   } catch (error) {
-    console.log(error.message);
-    Notify.failure('Something went wrang. Please try again.');
+    errorHandle(error);
   }
+}
+
+function dataHandle(data) {
+  if (data.hits.length === 0) {
+    Notify.info(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  } else {
+    Notify.success(`Hooray! We found ${data.totalHits} images`);
+    renderGallery(data);
+    gallery.refresh();
+    ifGalleryEnd(data);
+  }
+}
+
+function errorHandle(error) {
+  console.log(error.message);
+  Notify.failure('Something went wrang. Please try again.');
 }
 
 function renderGallery(data) {
@@ -70,7 +80,7 @@ function ifGalleryEnd(data) {
     Notify.info("We're sorry, but you've reached the end of search results.");
   } else {
     loadMoreBtn.classList.remove('is-hidden');
-      }
+  }
 }
 
 function smoothScroll() {
